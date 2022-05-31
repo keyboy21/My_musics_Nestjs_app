@@ -8,9 +8,9 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     const prismaService = app.get(PrismaService);
     await prismaService.enableShutdownHooks(app);
-    await app.listen(PORT, () => {
-      console.log(`Server service is running on port ${PORT}`);
-    });
+    await app.listen(PORT, () =>
+      console.log(`Server service is running on port ${PORT}`),
+    );
   } catch (error) {
     console.error(error);
   }
