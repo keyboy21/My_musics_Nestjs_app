@@ -1,11 +1,46 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+model User {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  username         String    @unique
+  email            String    @unique
+  password         String
+  comments         Comment[]
+  myFavoriteMusics Track[]
+
+}
+
+model Track {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  name       String    @unique
+  artist     String
+  text_music String
+  listens    Int       @default(0)
+  picture    String
+  audio      String
+  comments   Comment[]
+  author     User      @relation(fields: [authorId], references: [id])
+  authorId   String    @db.ObjectId
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now())
+}
+
+model Comment {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  text       String
+  track      Track    @relation(fields: [trackId], references: [id])
+  trackId    String   @db.ObjectId
+  username   User     @relation(fields: [usernameId], references: [id])
+  usernameId String   @db.ObjectId
+  createdAt  DateTime @default(now())
 }
