@@ -1,8 +1,6 @@
 import {
   Controller,
-  Get,
   Post,
-  Param,
   Body,
   HttpCode,
   HttpStatus,
@@ -10,6 +8,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guard/jwt.auth.guard';
+import { ValidationPipe } from '../pipes/validation.pipe';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CommentsService } from './comments.service';
 import { Comment as commentModel } from '@prisma/client';
@@ -21,8 +20,10 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @UseGuards(JwtAuthGuard)
+  @UseGuards(ValidationPipe)
   @ApiOperation({ summary: 'Create comment' })
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Comment created' })
+  @HttpCode(HttpStatus.OK)
   @Post('/create')
   async addComment(
     @Body() commentDto: CreateCommentDto,

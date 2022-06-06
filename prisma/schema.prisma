@@ -24,7 +24,7 @@ model Track {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   name       String    @unique
   artist     String
-  text_music String
+  text_music String?
   listens    Int       @default(0)
   picture    String
   audio      String

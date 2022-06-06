@@ -1,4 +1,5 @@
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ValidationPipe } from '../pipes/validation.pipe';
 import { AuthService } from './auth.service';
 import {
   Controller,
@@ -7,10 +8,11 @@ import {
   HttpCode,
   HttpStatus,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 
-import { User as userModel } from '@prisma/client';
 import { CreateUserDto } from './Dto/create-userd.dto';
+import { User as userModel } from '@prisma/client';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -31,6 +33,7 @@ export class AuthController {
     description: 'User created',
   })
   @Post('/register')
+  @UseGuards(ValidationPipe)
   @HttpCode(HttpStatus.OK)
   async createUser(
     @Body() createUser: CreateUserDto,

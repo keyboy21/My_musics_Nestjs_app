@@ -27,7 +27,7 @@ export class UserController {
     status: HttpStatus.OK,
     description: 'Users found',
   })
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get('/getAllUsers')
   async getAllUsers(): Promise<object[]> {

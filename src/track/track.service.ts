@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../services/prisma.service';
 import { Track as trackModel } from '@prisma/client';
 
@@ -30,7 +30,17 @@ export class TrackService {
     });
   }
 
-  async delete(id: string): Promise<trackModel> {
-    return await this.prisma.track.delete({ where: { id } });
+  async delete(data): Promise<trackModel> {
+    const { trackId, authorId } = data;
+
+    const Author = await this.prisma.track.findUnique({ where: authorId });
+
+    if (!Author) {
+      throw new BadRequestException(
+        'You do not have permission to delete this track',
+      );
+    }
+
+    return await this.prisma.track.delete({ where: { id: trackId } });
   }
 }

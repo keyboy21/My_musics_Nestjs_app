@@ -13,6 +13,7 @@ import {
   HttpCode,
   HttpStatus,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 
 import { Track as trackModel } from '@prisma/client';
@@ -47,12 +48,14 @@ export class TrackController {
     return this.trackService.getById(id);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete track' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Track deleted' })
-  @Delete(':id')
+  @Delete()
   @HttpCode(HttpStatus.OK)
-  async delete(@Param('id') id: string): Promise<trackModel> {
-    return this.trackService.delete(id);
+  async delete(
+    @Body() data: { trackId: string; authorId: string },
+  ): Promise<trackModel | BadRequestException> {
+    return this.trackService.delete(data);
   }
 }
