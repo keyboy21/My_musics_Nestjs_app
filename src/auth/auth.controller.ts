@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 
 import { CreateUserDto } from './Dto/create-userd.dto';
+import { LoginUserDto } from './Dto/login-user.dto';
 import { User as userModel } from '@prisma/client';
 
 @ApiTags('auth')
@@ -19,10 +20,15 @@ import { User as userModel } from '@prisma/client';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiOperation({ summary: 'Login user' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User created',
+  })
   @Post('/login')
   @HttpCode(HttpStatus.OK)
   async loginUser(
-    @Body() loginUser: userModel,
+    @Body() loginUser: LoginUserDto,
   ): Promise<object | BadRequestException> {
     return this.authService.loginUser(loginUser);
   }

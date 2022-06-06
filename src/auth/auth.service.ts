@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../services/prisma.service';
 import { User as userModel } from '@prisma/client';
 import { CreateUserDto } from './Dto/create-userd.dto';
+import { LoginUserDto } from './Dto/login-user.dto';
 
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -17,7 +18,9 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async loginUser(userDto: userModel): Promise<object | BadRequestException> {
+  async loginUser(
+    userDto: LoginUserDto,
+  ): Promise<object | BadRequestException> {
     const User = await this.validateUser(userDto);
 
     return await this.generateToken(User);
@@ -65,7 +68,7 @@ export class AuthService {
     };
   }
 
-  private async validateUser(user: userModel) {
+  private async validateUser(user: LoginUserDto) {
     if (!user.email) {
       throw new BadRequestException('Email is required');
     }
