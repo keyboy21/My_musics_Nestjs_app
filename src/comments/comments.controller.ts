@@ -1,11 +1,14 @@
 import {
   Controller,
   Post,
+  Get,
   Body,
   HttpCode,
   HttpStatus,
   UseGuards,
   BadRequestException,
+  Param,
+  UsePipes,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guard/jwt.auth.guard';
 import { ValidationPipe } from '../pipes/validation.pipe';
@@ -20,7 +23,7 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @UseGuards(JwtAuthGuard)
-  @UseGuards(ValidationPipe)
+  @UsePipes(ValidationPipe)
   @ApiOperation({ summary: 'Create comment' })
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Comment created' })
   @HttpCode(HttpStatus.OK)
@@ -41,5 +44,13 @@ export class CommentsController {
     }
 
     return this.commentsService.createComment(commentDto);
+  }
+
+  @ApiOperation({ summary: 'Get track comments' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Track comment' })
+  @HttpCode(HttpStatus.OK)
+  @Get(':id')
+  async getCommentsMusic(@Param('id') id: string): Promise<commentModel[]> {
+    return this.commentsService.getCommentsMusic(id);
   }
 }

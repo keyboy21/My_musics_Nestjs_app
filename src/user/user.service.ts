@@ -39,7 +39,7 @@ export class UserService {
   async getMyFavouriteMusics(id: string): Promise<object> {
     return await this.prisma.user.findUnique({
       where: { id },
-      select: { myFavoriteMusics: true },
+      select: { myFavoriteMusics: true, username: true },
     });
   }
 }

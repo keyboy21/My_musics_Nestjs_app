@@ -30,4 +30,8 @@ export class CommentsService {
       },
     });
   }
+
+  async getCommentsMusic(id: string): Promise<commentModel[]> {
+    return this.prisma.comment.findMany({ where: { trackId: id } });
+  }
 }

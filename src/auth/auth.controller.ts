@@ -8,7 +8,7 @@ import {
   HttpCode,
   HttpStatus,
   BadRequestException,
-  UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 
 import { CreateUserDto } from './Dto/create-userd.dto';
@@ -25,6 +25,7 @@ export class AuthController {
     status: HttpStatus.OK,
     description: 'User created',
   })
+  @UsePipes(ValidationPipe)
   @Post('/login')
   @HttpCode(HttpStatus.OK)
   async loginUser(
@@ -39,8 +40,8 @@ export class AuthController {
     description: 'User created',
   })
   @Post('/register')
-  @UseGuards(ValidationPipe)
   @HttpCode(HttpStatus.OK)
+  @UsePipes(ValidationPipe)
   async createUser(
     @Body() createUser: CreateUserDto,
   ): Promise<userModel | BadRequestException> {
