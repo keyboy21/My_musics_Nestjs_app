@@ -1,4 +1,3 @@
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TrackService } from './track.service';
 import { JwtAuthGuard } from '../auth/guard/jwt.auth.guard';
 import {
@@ -8,15 +7,19 @@ import {
   Delete,
   Param,
   Body,
-  UseInterceptors,
-  UploadedFile,
   HttpCode,
   HttpStatus,
   UseGuards,
   BadRequestException,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 import { Track as trackModel } from '@prisma/client';
+import { CreateTrackDto } from './Dto/create-track.dto';
 
 @ApiTags('Track')
 @Controller('tracks')
@@ -26,10 +29,21 @@ export class TrackController {
   // @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create Track' })
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Track created' })
-  @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createTrack: trackModel): Promise<string> {
-    return this.trackService.create(createTrack);
+  @Post('/create')
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'picture', maxCount: 1 },
+      { name: 'audio', maxCount: 1 },
+    ]),
+  )
+  async create(
+    @UploadedFiles()
+    files,
+    @Body() createTrack: CreateTrackDto,
+  ) {
+    const { picture, audio } = files;
+    return this.trackService.create(createTrack, picture[0], audio[0]);
   }
 
   @ApiOperation({ summary: 'Get All tracks' })
@@ -57,5 +71,10 @@ export class TrackController {
     @Body() data: { trackId: string; authorId: string },
   ): Promise<trackModel | BadRequestException> {
     return this.trackService.delete(data);
+  }
+
+  @Post('/listen/:id')
+  async listen(@Param('id') id: string) {
+    return this.trackService.listen(id);
   }
 }

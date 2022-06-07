@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 
-import { User as userModel, Track as trackModel } from '@prisma/client';
+// import { User as userModel, Track as trackModel } from '@prisma/client';
 
 import { PrismaService } from '../services/prisma.service';
 

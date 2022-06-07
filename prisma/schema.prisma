@@ -26,7 +26,7 @@ model Track {
   artist     String
   text_music String?
   listens    Int       @default(0)
-  picture    String
+  picture    String?
   audio      String
   comments   Comment[]
   author     User      @relation(fields: [authorId], references: [id])

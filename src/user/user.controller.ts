@@ -9,12 +9,11 @@ import {
   UseGuards,
   BadRequestException,
   Param,
-  Put,
 } from '@nestjs/common';
 
 import { JwtAuthGuard } from '../auth/guard/jwt.auth.guard';
 
-import { User as userModel, Track as trackModel } from '@prisma/client';
+// import { User as userModel, Track as trackModel } from '@prisma/client';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User')

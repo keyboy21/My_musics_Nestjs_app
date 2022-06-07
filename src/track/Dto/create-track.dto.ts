@@ -14,10 +14,7 @@ export class CreateTrackDto {
   @ApiProperty({ example: 'Michael Jackson', description: 'Text music' })
   readonly text_music: string;
 
-  @ApiProperty({ example: 'Somemusic.mp3', description: 'Music' })
-  readonly picture: File;
-
-  @ApiProperty({ example: 'Author', description: 'AuthorId' })
+  @ApiProperty({ example: '629f0f4e1553ad1dbeb4cb2e', description: 'AuthorId' })
   @IsMongoId({ message: 'Must be a valid mongo id' })
   readonly author: string;
 }
