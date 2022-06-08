@@ -1,7 +1,5 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 
-// import { User as userModel, Track as trackModel } from '@prisma/client';
-
 import { PrismaService } from '../services/prisma.service';
 
 @Injectable()
@@ -23,17 +21,18 @@ export class UserService {
       return new BadRequestException('User not found');
     }
 
-    // const user = await this.prisma.user.update({
-    //   where: { id: userId },
-    //   data: { myFavoriteMusics: { connect: { id: trackId } } },
-    // });
-    // const data = { userId, trackId };
-    // return await this.prisma.user.update({
-    //   where: { id: userId },
-    //   data: { myFavoriteMusics: { connect: { id: trackId } } },
-    // });
+    const Track = await this.prisma.track.findUnique({
+      where: { id: trackId },
+    });
 
-    return User;
+    if (!Track) {
+      return new BadRequestException('Track not found');
+    }
+
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: { myFavoriteMusics: { connect: { id: Track.id } } },
+    });
   }
 
   async getMyFavouriteMusics(id: string): Promise<object> {

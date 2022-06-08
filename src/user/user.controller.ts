@@ -13,7 +13,6 @@ import {
 
 import { JwtAuthGuard } from '../auth/guard/jwt.auth.guard';
 
-// import { User as userModel, Track as trackModel } from '@prisma/client';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User')
@@ -37,11 +36,11 @@ export class UserController {
     status: HttpStatus.OK,
     description: 'Tracks found',
   })
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('/addToFavourite')
   async addToFavourite(
-    @Body() data: { trackid: string; userid: string },
+    @Body() data: { trackId: string; userId: string },
   ): Promise<object | BadRequestException> {
     if (!data) {
       return new BadRequestException('trackId or userId is required');
@@ -55,8 +54,8 @@ export class UserController {
     status: HttpStatus.OK,
     description: 'Tracks found',
   })
-  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getFavourite(@Param('id') id: string): Promise<object> {
     return this.userService.getMyFavouriteMusics(id);
