@@ -26,7 +26,7 @@ import { CreateTrackDto } from './Dto/create-track.dto';
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create Track' })
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Track created' })
   @HttpCode(HttpStatus.CREATED)
@@ -65,14 +65,17 @@ export class TrackController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete track' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Track deleted' })
-  @Delete()
   @HttpCode(HttpStatus.OK)
+  @Delete()
   async delete(
     @Body() data: { trackId: string; authorId: string },
-  ): Promise<trackModel | BadRequestException> {
+  ): Promise<HttpStatus | BadRequestException> {
     return this.trackService.delete(data);
   }
 
+  @ApiOperation({ summary: 'Listened' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Track listened' })
+  @HttpCode(HttpStatus.OK)
   @Post('/listen/:id')
   async listen(@Param('id') id: string) {
     return this.trackService.listen(id);

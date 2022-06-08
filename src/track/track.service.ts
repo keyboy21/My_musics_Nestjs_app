@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, HttpStatus } from '@nestjs/common';
 import { PrismaService } from '../services/prisma.service';
 import { FileService, FileType } from '../file/file.service';
 import { Track as trackModel } from '@prisma/client';
@@ -38,18 +38,29 @@ export class TrackService {
     });
   }
 
-  async delete(data): Promise<trackModel> {
+  async delete(data): Promise<HttpStatus> {
     const { trackId, authorId } = data;
 
-    const Author = await this.prisma.track.findUnique({ where: authorId });
+    const Track = await this.prisma.track.findUnique({
+      where: { id: trackId },
+    });
 
-    if (!Author) {
-      throw new BadRequestException(
-        'You do not have permission to delete this track',
-      );
+    if (Track.authorId !== authorId) {
+      throw new BadRequestException('You are not author of this track');
     }
 
-    return await this.prisma.track.delete({ where: { id: trackId } });
+    const deletedTrack = await this.prisma.track.delete({
+      where: { id: trackId },
+    });
+
+    if (deletedTrack) {
+      const pic = await this.fileService.removeFile(deletedTrack.picture);
+      const audi = await this.fileService.removeFile(deletedTrack.audio);
+
+      if (pic && audi) {
+        return HttpStatus.OK;
+      }
+    }
   }
 
   async listen(id: string): Promise<trackModel> {
