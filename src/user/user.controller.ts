@@ -13,6 +13,8 @@ import {
 
 import { JwtAuthGuard } from '../auth/guard/jwt.auth.guard';
 
+import { Track as trackModel } from '@prisma/client';
+
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User')
@@ -59,5 +61,16 @@ export class UserController {
   @Get(':id')
   async getFavourite(@Param('id') id: string): Promise<object> {
     return this.userService.getMyFavouriteMusics(id);
+  }
+
+  @ApiOperation({ summary: 'Get my favourite musics' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Delete from favourite' })
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Post('/deleteAtFavourite')
+  async deleteAtFavourite(
+    @Body() data: { userId: string; trackId: string },
+  ): Promise<trackModel | BadRequestException> {
+    return this.userService.deleteAtFavourite(data);
   }
 }
