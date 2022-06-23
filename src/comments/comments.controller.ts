@@ -49,7 +49,7 @@ export class CommentsController {
   @ApiOperation({ summary: 'Get track comments' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Track comment' })
   @HttpCode(HttpStatus.OK)
-  @Get(':id')
+  @Get(':commentId')
   async getCommentsMusic(@Param('id') id: string): Promise<commentModel[]> {
     return this.commentsService.getCommentsMusic(id);
   }

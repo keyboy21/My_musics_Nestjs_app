@@ -56,7 +56,7 @@ export class TrackController {
 
   @ApiOperation({ summary: 'Get one track' })
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Track founded' })
-  @Get(':id')
+  @Get(':trackId')
   @HttpCode(HttpStatus.OK)
   async getOne(@Param('id') id: string): Promise<trackModel> {
     return this.trackService.getById(id);
@@ -76,7 +76,7 @@ export class TrackController {
   @ApiOperation({ summary: 'Listened' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Track listened' })
   @HttpCode(HttpStatus.OK)
-  @Post('/listen/:id')
+  @Post('/listen/:trackId')
   async listen(@Param('id') id: string) {
     return this.trackService.listen(id);
   }

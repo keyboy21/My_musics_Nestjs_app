@@ -58,7 +58,7 @@ export class UserController {
   })
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
+  @Get(':userId')
   async getFavourite(@Param('id') id: string): Promise<object> {
     return this.userService.getMyFavouriteMusics(id);
   }
